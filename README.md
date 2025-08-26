@@ -11,11 +11,14 @@ A simple command-line utility written in Go that converts the contents of a `.zi
 
 ## Architecture Overview
 
-This project follows a layered architecture to separate concerns, making it easier to maintain and test:
+This project maintains a logical layered architecture to separate concerns, implemented within a simplified file structure:
 
--   **Handler Layer (`cmd/zip2pdf`)**: Responsible for parsing command-line arguments and handling user interaction. It's the entry point of the application.
--   **Service Layer (`internal/service`)**: Contains the core business logic. It orchestrates the other layers to perform the conversion workflow (extract then generate).
--   **Data/Utility Layers (`internal/archiver`, `internal/generator`)**: These layers handle specific tasks. `archiver` deals with zip file extraction, and `generator` deals with PDF creation.
+-   **Handler Layer (`cmd/main.go`)**: This is the entry point of the application. It is responsible for parsing command-line arguments and handling all user interaction.
+
+-   **Internal Logic (`internal/`)**: All core logic resides within the `internal` package, with responsibilities separated by file:
+    -   **`service.go`**: Acts as the **Service Layer**. It orchestrates the conversion process, calling the utility handlers in the correct order (first extract, then generate).
+    -   **`zip_handler.go`**: A utility component responsible solely for extracting `.zip` files.
+    -   **`pdf_handler.go`**: A utility component responsible solely for generating the PDF document from a directory structure.
 
 ## Prerequisites
 
@@ -36,9 +39,9 @@ This project follows a layered architecture to separate concerns, making it easi
 
 3.  Build the executable binary:
     ```sh
-    go build -o zip2pdf ./cmd/zip2pdf/
+    go build -o zip2pdf ./cmd/
     ```
-    This command will create a binary named `zip2pdf` in the current directory.
+    This command compiles the `main.go` file inside the `cmd` directory and creates a binary named `zip2pdf` in the project's root folder.
 
 ## How to Use the Binary
 
@@ -53,7 +56,7 @@ Once you have built the binary, you can use it directly from your terminal.
 ### Example
 
 1.  Make sure you have a zip file ready (e.g., `my-project.zip`).
-2.  Run the command:
+2.  Run the command from your project's root directory:
     ```sh
     ./zip2pdf my-project.zip
     ```
